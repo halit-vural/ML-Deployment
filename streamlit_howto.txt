@@ -1,0 +1,138 @@
+first steps:
+
+  install environment:
+    VS Code Terminal
+      >python3 -V                 #check version
+      >python -m pip install --upgrade pip
+      >python3 -m venv strl_env   # make a new environment
+      A new folder created (strl_env)
+
+  Activate new env:
+    VS Code Terminal
+      >./strl_env/Scripts/activate   # Windows
+      >source strl_env/bin/activate       # linux
+
+  install Streamlit:
+      (strl_env)
+      >pip3 list          # list available packages
+      >pip3 install streamlit
+
+      check:
+      >streamlit hello
+      exit: Ctrl+C
+
+  install required packages:
+      (strl_env)
+      >pip install sklearn
+      >
+
+Code:
+  >cd strl_env/
+  make a new file: RFapp.py
+
+
+
+
+Run Streamlit:
+  (strl_env)
+  >streamlit run myApp.py
+
+
+
+
+Deploy in Streamlit:
+Load your folder as a repo in Github
+open web: streamlit.io
+  click "new app" on the right up
+  select your repo
+  click deploy!
+
+  when finished, 
+    share your app  >> right top
+    enable public   >> check
+
+
+
+trouble-shoot: 
+    -if it gives error, check the version of the package 
+    change your requirement to that version (last one in version list).
+    update your file in repo >> it automatically continues install process
+    -always name requirement file as 'requirements.txt'
+
+
+
+
+
+Deploy in EC2:
+  open web: console.aws.amazon.com
+  open EC2
+    click Launch Instance (blue button)
+    step1: choose machine: linux 2 (64-bit)
+    step2: choose instance type : t2.micro
+    step3: next
+    step4: max 30gb (free tier)
+    step5:next
+    step6: add port TCP 8501 source 'anywhere'
+          add port TCP 8502 source 'anywhere'
+    step7: define key. save pem file
+    done.
+    list instances
+      Description > ipv4 public ip >> copy
+  makedir > .ssh
+  make file > config
+          Host < instance name >
+          HostName <paste from ec2>
+          IdentityFile <path to pem file>    
+          User ec2-user     #exactly
+  open VS Code:
+    click ssh icon (left-bottom corner)
+      menu > Open SSH Configuration File...
+        in config set params
+            paste ip
+    remote explorer: left menu
+      connect to HostName
+          click continue
+      EC2 Home
+        new folder: Strl_Project
+        >cd Strl_Project
+        copy your project files here (drag&drop)
+        open Terminal
+        make new environment (see codes above)
+        activate the environment (see codes above)
+        (env)
+        >pip install streamlit
+
+        install tmux:               # for running streamlit remotely
+        >sudo yum install tmux
+        >tmux new -s str_project
+        tmux is running now
+
+        run your project in tmux
+        (env)
+        >streamlit run myApp.py       # run the project
+
+        leave terminal when tmux is running:
+        press 'ctrl+b' and 'd'
+      you are detached from tmux
+      you can exit EC2 system
+
+        re-Attach tmux session:
+        >tmux ls                # see availabl sessions
+        >tmux attach -t str_project     # attach to your running project
+        you are attached now. you will see green ribbon at the buttom
+
+
+        end tmux session:
+        >tmux kill-session -t mySession
+        >tmux ls
+        no sessions available.
+
+
+
+
+
+
+
+       
+
+     
