@@ -1,0 +1,11 @@
+VS Code
+    make new environment (flask_env)
+    activate environment
+        (flask_env)
+        >python3 --version      #check version
+        >pip3 install flask
+        make a new flask file (flask_main.py)
+        run flask file:
+            >python3 flask_main.py   (Win)
+            >sudo python3 flask_main.py   (linux)
+        it is running!
