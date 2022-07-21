@@ -1,0 +1,34 @@
+install a new environment
+--------------------
+VS Code Terminal:
+    >python3 -V                 #check version
+    >python -m pip install --upgrade pip
+
+    make new environment
+    >python3 -m venv strl_env   # make a new environment
+    A new folder created (strl_env)
+
+Activate new env:
+VS Code Terminal:
+    >./strl_env/Scripts/activate   # Windows
+    >source strl_env/bin/activate       # linux
+
+install required packages:
+    (strl_env)
+    >pip install sklearn
+    >
+
+or install packages from requirements file:
+    (strl_env)
+    >pip3 install -r requirements.txt
+
+
+store environment requirements into a file:
+    (strl_env)
+    >pip3 freeze > requirements.txt
+
+
+
+       
+
+     
