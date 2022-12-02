@@ -1,0 +1,77 @@
+SageMaker
+    - Tools
+    - SDKs
+    - Sample Codes/projects
+
+User interface
+    AWS console
+    SageMaker Notebooks
+    SageMaker Studio
+
+Machine interface 
+    API
+    SDKs (BOTO 3)
+    SageMaker SDK
+
+Infrastructure
+    SageMaker Containers
+    Built-in Algorithms (Containers)
+    Container Orchestration
+=================
+
+SageMaker Studio
+    IDE for Machine Learning
+    Web based UI
+    Create, manage experiments
+    Tune models, upload data
+    Zero coding (Autopilot)
+    
+    Collaboration at scale 
+        Share notebooks without tracking dependencies
+    Easy experiment management
+        Organize, track and compare thousands of experiments
+    Automatic model generation
+        Get accurate models with full visibility
+
+Canvas
+    Zero coding
+    Develop ML models
+
+Ground Truth
+    Labeling jobs
+
+Notebook
+    Notebook instance > new instances (Jupyter)
+
+Training jobs
+    3-4 minutes training
+    used for building models
+
+SageMaker Pricing
+    free tier
+        first 2 months after registration
+            studio/notebooks
+                250 hrs of ml.t3.medium instance
+            training
+                50 hrs of m4.xlarge or m5.xlarge instances
+
+
+=== AWS SageMaker demo (hands-on) ===
+login AWS management console
+open SageMaker
+Notebook (on left menu)  > Notebook instances
+
+
+open studio (left menu)
+
+
+open jupyter notebook
+>import boto3
+>bucke_name="ml-bucket-new"
+>s3= boto3.resource("s3")  
+>s3.create_bucket(Bucket=bucket_name)
+>s3.Bucket(bucket_name).Object("data/data.csv").upload_file("data.csv")
+>s3.Bucket(bucket_name).Object("test/test.csv").upload_file("test.csv")
+>s3.Bucket(bucket_name).download_file("data/data.csv", 'downloaded_data.csv')
+>s3.Bucket(bucket_name).download_file("test/test.csv", 'downloaded_test.csv')
+

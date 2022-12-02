@@ -1,0 +1,166 @@
+Containers vs VM
+    VM
+        Many Guest OSs over one Host OS
+        Guest Depends on Host OS
+    Docker
+        Docker Engine on Host
+        No guest OS
+        Independant from OS
+        OS-level virtualization
+
+Docker-hub
+    commit your own solution
+    library of solutions published by community
+
+
+--------- Hands-on activity -------
+VS Code
+    connect EC2-user
+        setup a new virtual environment
+        copy your app to EC2 Host (drag&drop)
+        in Terminal
+            >sudo yum update -y
+            >sudo amazon-linux-extras install docker -y
+            >sudo systemctl start docker
+            >sudo systemctl enable docker
+            >sudo docker ps        #show running containers
+            >sudo docker ps -a      #show all containers
+            >sudo usermod -aG docker ec2-user   #give admin auth to our docker
+            >newgrp docker
+            that ended env session
+
+            >docker container ls
+            >docker pull ubuntu #install ubuntu for my environment
+            >docker image ls    #list my new ubuntu image
+            activate environment again
+            >docker run -it --name myubuntu ubuntu #create a new container including my ubuntu image (name it as myubuntu [optional])
+            now we're in our new container
+                if there's not python, we should install it
+                >apt-get update -y      #install ubuntu update (-y >> yes prompt)
+                >apt-get install python3
+                >apt-get install python3-pip
+                >pip3 install pandas
+                close terminal (X) veya >exit
+
+            we're in ec2-user bash terminal
+            >sudo docker ps     #check docker
+            as you see there's no docker container
+            make a new shell file (docker_runner.sh)
+            in the docker_runner.sh
+                    #!/bin/sh
+                    sudo yum update -y
+                    sudo amazon-linux-extras install docker -y
+                    sudo service docker start
+                    sudo usermod -aG docker ec2-user
+                    newgrp docker
+                    systemctl enable docker
+            >sh docker_runner.sh       #run our new .sh file
+            >docker start myubuntu   #run my container
+            >docker ps  #i can see my ubuntu container running
+            >docker attach myubuntu     #attach to my container/we can also use the first 3 digits of container id
+
+            we're in docker container now
+            >apt-get install vim -y     #install a text file editor
+            >vim test_file.txt      #my new file
+            >cat test_file.txt
+            we're in the file now
+                write something for testing
+                if the container is destroyed, this file will be gone
+                So, we need to process our container with a volume
+                press  > esc > : > w > q (to save and quit file)
+            we're in terminal (container) again
+            >ls -lhtr       #list all files in our systemctl
+
+--- volume setup for content safety---
+        in ec2-user terminal
+            >docker run -it -d --name mycontainer2 ubuntu    #a new container
+            #-d > detach flag, so we are out of new container
+            still in ec2-user
+            >docker ps      #list running containers
+            we see our new container running
+            >docker ps -a   #list all
+            we see that our prev container listed
+            >docker attach mycontainer2
+            
+            we're in our new container (ubuntu env)
+            >apt-get install update -y      #setup my new system
+            >mkdir my_dat && cd my_data     #create a new folder and open
+            >vim test_file2.txt
+            >cat test_file2.txt
+                    shft + A > edit mode
+                    write something
+                    esc > :wq
+                that saved our file
+            we're back in ubuntu shell terminal
+            exit
+        in ec2-user bash terminal
+        >docker volume ls   #check if we have any volume
+        we don't have any volume yet.
+        >docker volume create my_volume     #make a new volume
+        >docker volume ls       #list volumes
+        >docker volume inspect my_volume
+        i see the info about my volume
+        mountpoint > path is important copy that path (call it my_path)
+        >sudo ls my_path
+        there is no file in the path location
+        >docker run -itd -v my_volume:/my_folder --name mycontainer3 ubuntu
+        # it will create a new container attached to my new volume
+        >docker attach mycontainer3
+            we're in container now
+            >apt-get update -y
+            >apt-get install vim -y
+            >cd my_folder           #my folder is already there
+            >vim test_file3.txt
+                    shft + a
+                    write something
+                    esc > :wq
+            >exit
+        in ec2-user
+        >docker ps
+        >docker volume ls
+        >docker volume inspect my_volume
+        >docker ps -a
+        >docker start container3
+        in ec2-user
+        >sudo cat my_path/my_folder/test_file3.txt
+        # that will list the content of my file
+        now if we destroy our container, the files/content of it will stay
+
+
+------- automate docker preparation ---------
+create a new file named "Dockerfile" exactly as it is
+in Dockerfile
+        FROM ubuntu                             #install ubuntu in it
+        RUN apt-get update -y
+        RUN apt-get install python3 -y
+        RUN apt-get install python3-pip -y
+        RUN pip3 install --upgrade pip
+        WORKDIR my_app                          #make a new dir
+        COPY . /my_app                                #copy all files to this dir
+        RUN pip3 install -r requirements.txt    #install requirements
+        CMD sh run app.sh                #run my shell file
+        >>save file and close
+
+
+
+
+        
+
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
